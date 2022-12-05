@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="ticket"
+            type="com.example.secure_unico.network.Ticket" />
+        <variable
+            name="clickListner"
+            type="com.example.secure_unico.TicketListener" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:onClick="@{() -> clickListner.onClick(ticket)}"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="8dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/ticket_icon"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="10dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/membership_icon"
+                app:tint="?attr/colorSecondary" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/ticket_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/location"
+                app:layout_constraintStart_toEndOf="@id/ticket_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="@{ticket.getTicketType()}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                tools:text="Abbonamento Studenti" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/ticket_icon"
+                app:layout_constraintBottom_toBottomOf="@id/ticket_icon"
+                app:layout_constraintStart_toStartOf="@id/ticket_title"
+                android:text="@{@string/route(ticket.startingPoint,ticket.endingPoint)}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                tools:text="Melito di Napoli - Napoli" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/location"
+                app:layout_constraintStart_toStartOf="@id/location"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@{@string/ticket_date(ticket.startValidation)}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                tools:text="Valido fino al: 31/07/2023 22:59" />
+
+            <ImageView
+                android:id="@+id/arrow"
+                android:importantForAccessibility="no"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/arrow_icon"
+                app:tint="?attr/colorSecondary" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>
