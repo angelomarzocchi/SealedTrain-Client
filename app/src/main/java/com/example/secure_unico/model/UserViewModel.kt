@@ -16,12 +16,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 
-enum class SealedApiStatus {LOADING, ERROR, DONE}
-enum class QrCodeStatus {LOADING, DONE}
+enum class SealedApiStatus { LOADING, ERROR, DONE }
+enum class QrCodeStatus { LOADING, DONE }
+
 const val bearer = "Bearer "
 
-class UserViewModel: ViewModel() {
-//login data
+class UserViewModel : ViewModel() {
+    //login data
     private val _loginStatus = MutableLiveData<SealedApiStatus>()
     private val _tokenResponse = MutableLiveData<TokenResponse>()
     private val _tickets = MutableLiveData<List<Ticket>>()
@@ -29,14 +30,12 @@ class UserViewModel: ViewModel() {
     private val _ticket = MutableLiveData<Ticket>()
 
 
-     lateinit var bitmap: Bitmap
+    lateinit var bitmap: Bitmap
     private val _qrcodeStatus = MutableLiveData<QrCodeStatus>()
-    private val qrCodeStatus:LiveData<QrCodeStatus> = _qrcodeStatus
-
+    private val qrCodeStatus: LiveData<QrCodeStatus> = _qrcodeStatus
 
 
     //authdata
-
 
 
     val loginStatus: LiveData<SealedApiStatus> = _loginStatus
@@ -45,23 +44,19 @@ class UserViewModel: ViewModel() {
     val ticket: LiveData<Ticket> = _ticket
 
 
-
-
-
-
-     fun getToken(username: String,password: String) {
+    fun getToken(username: String, password: String) {
 
 
         runBlocking {
-            loginRequest = LoginRequest(username,password)
+            loginRequest = LoginRequest(username, password)
             _loginStatus.value = SealedApiStatus.LOADING
-            try{
+            try {
                 _tokenResponse.value = SealedApi.retrofitService.getToken(loginRequest)
-                    _loginStatus.value = SealedApiStatus.DONE
+                _loginStatus.value = SealedApiStatus.DONE
 
 
-            } catch (e:Exception) {
-                    Log.d("loginError",e.message.toString())
+            } catch (e: Exception) {
+                Log.d("loginError", e.message.toString())
                 _loginStatus.value = SealedApiStatus.ERROR
             }
         }
@@ -71,29 +66,30 @@ class UserViewModel: ViewModel() {
     fun authenticate() {
         viewModelScope.launch {
             try {
-                SealedApi.retrofitService.authenticate(bearer +tokenResponse.value!!.token)
-            } catch(e:Exception) {
-                Log.d("authError",e.message.toString())
+                SealedApi.retrofitService.authenticate(bearer + tokenResponse.value!!.token)
+            } catch (e: Exception) {
+                Log.d("authError", e.message.toString())
             }
         }
     }
 
     fun getTicketsFromApi() {
-        runBlocking {
+        viewModelScope.launch {
             try {
-                _tickets.value = SealedApi.retrofitService.getTickets(bearer + tokenResponse.value!!.token)
-            } catch (e:Exception) {
+                _tickets.value =
+                    SealedApi.retrofitService.getTickets(bearer + tokenResponse.value!!.token)
+            } catch (e: Exception) {
                 _tickets.value = listOf()
-                Log.d("getTicketsError",e.message.toString())
+                Log.d("getTicketsError", e.message.toString())
             }
         }
     }
 
-    private fun generateQrCode() {
+    fun generateQrCode(color: Int) {
         viewModelScope.launch {
             _qrcodeStatus.value = QrCodeStatus.LOADING
             val qrgEncoder = QRGEncoder(ticket.value?.qrcode, null, QRGContents.Type.TEXT, 1024)
-
+            qrgEncoder.colorBlack = color
             bitmap = qrgEncoder.getBitmap(0)
             _qrcodeStatus.value = QrCodeStatus.DONE
         }
@@ -105,7 +101,7 @@ class UserViewModel: ViewModel() {
     }
 
     fun getType(): String {
-        return when(ticket.value?.type) {
+        return when (ticket.value?.type) {
             "FULL_YEAR" -> "Full Year"
             "SEVEN_DAYS" -> "Seven Days"
             "ONE_DAY" -> "One Day"
@@ -114,15 +110,18 @@ class UserViewModel: ViewModel() {
     }
 
     fun getValidation(): String {
-        return "${ticket.value?.startValidation?.subSequence(0,10)}\n${ticket.value?.startValidation?.subSequence(11,19)}"
+        return "${
+            ticket.value?.startValidation?.subSequence(
+                0,
+                10
+            )
+        }\n${ticket.value?.startValidation?.subSequence(11, 19)}"
     }
 
     fun onTicketClicked(ticket: Ticket) {
         _ticket.value = ticket
-        generateQrCode()
+
     }
-
-
 
 
 }

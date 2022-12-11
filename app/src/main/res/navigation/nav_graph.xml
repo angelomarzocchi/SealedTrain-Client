@@ -11,7 +11,8 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_listFragment"
-            app:destination="@id/listFragment" />
+            app:destination="@id/listFragment"
+            app:enterAnim="@android:anim/slide_in_left" />
     </fragment>
     <fragment
         android:id="@+id/listFragment"
@@ -20,7 +21,9 @@
         tools:layout="@layout/fragment_list">
         <action
             android:id="@+id/action_listFragment_to_qrcodeFragment"
-            app:destination="@id/qrcodeFragment" />
+            app:destination="@id/qrcodeFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/qrcodeFragment"

@@ -14,3 +14,5 @@ data: List<Ticket>?) {
     adapter.submitList(data)
 }
 
+
+

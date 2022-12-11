@@ -4,11 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.secure_unico.databinding.FragmentListBinding
 import com.example.secure_unico.model.UserViewModel
@@ -21,16 +18,12 @@ class ListFragment : Fragment() {
     private val userViewModel: UserViewModel by activityViewModels()
 
 
-
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        val fragmentBinding = FragmentListBinding.inflate(inflater,container,false)
+        val fragmentBinding = FragmentListBinding.inflate(inflater, container, false)
         binding = fragmentBinding
         binding.lifecycleOwner = viewLifecycleOwner
         userViewModel.getTicketsFromApi()
@@ -45,23 +38,19 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-          //  lifecycleOwner = viewLifecycleOwner
+            //  lifecycleOwner = viewLifecycleOwner
             listFragment = this@ListFragment
             viewModel = userViewModel
 
-           // yourTicketTextView.text = userViewModel.tickets.value.toString()
+            // yourTicketTextView.text = userViewModel.tickets.value.toString()
 
 
         }
 
-       // viewModel.authenticate()
-
-
+        // viewModel.authenticate()
 
 
     }
-
-
 
 
 }
