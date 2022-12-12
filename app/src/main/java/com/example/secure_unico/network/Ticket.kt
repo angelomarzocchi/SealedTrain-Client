@@ -1,11 +1,7 @@
 package com.example.secure_unico.network
 
-import android.content.ContentResolver
-import android.provider.Settings.Global.getString
-import com.example.secure_unico.R
 
-
- class Ticket(
+class Ticket(
 
     val startValidation: String,
     val type: String,

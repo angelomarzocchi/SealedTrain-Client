@@ -12,18 +12,19 @@ import com.example.secure_unico.network.LoginRequest
 import com.example.secure_unico.network.SealedApi
 import com.example.secure_unico.network.Ticket
 import com.example.secure_unico.network.TokenResponse
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 
-enum class SealedApiStatus { LOADING, ERROR, DONE }
+enum class SealedApiStatus {NOT_INITIALIZED, LOADING, ERROR, DONE }
 enum class QrCodeStatus { LOADING, DONE }
 
 const val bearer = "Bearer "
 
 class UserViewModel : ViewModel() {
     //login data
-    private val _loginStatus = MutableLiveData<SealedApiStatus>()
+    private val _loginStatus = MutableStateFlow(SealedApiStatus.NOT_INITIALIZED)
     private val _tokenResponse = MutableLiveData<TokenResponse>()
     private val _tickets = MutableLiveData<List<Ticket>>()
     private lateinit var loginRequest: LoginRequest
@@ -32,27 +33,28 @@ class UserViewModel : ViewModel() {
 
     lateinit var bitmap: Bitmap
     private val _qrcodeStatus = MutableLiveData<QrCodeStatus>()
-    private val qrCodeStatus: LiveData<QrCodeStatus> = _qrcodeStatus
+
 
 
     //authdata
 
 
-    val loginStatus: LiveData<SealedApiStatus> = _loginStatus
+    val loginStatus: StateFlow<SealedApiStatus> = _loginStatus
     val tokenResponse: LiveData<TokenResponse> = _tokenResponse
     val tickets: LiveData<List<Ticket>> = _tickets
     val ticket: LiveData<Ticket> = _ticket
 
 
-    fun getToken(username: String, password: String) {
+    fun getToken(username: String, password: String,) {
 
 
-        runBlocking {
+        viewModelScope.launch {
             loginRequest = LoginRequest(username, password)
             _loginStatus.value = SealedApiStatus.LOADING
             try {
                 _tokenResponse.value = SealedApi.retrofitService.getToken(loginRequest)
                 _loginStatus.value = SealedApiStatus.DONE
+
 
 
             } catch (e: Exception) {
@@ -61,16 +63,6 @@ class UserViewModel : ViewModel() {
             }
         }
 
-    }
-
-    fun authenticate() {
-        viewModelScope.launch {
-            try {
-                SealedApi.retrofitService.authenticate(bearer + tokenResponse.value!!.token)
-            } catch (e: Exception) {
-                Log.d("authError", e.message.toString())
-            }
-        }
     }
 
     fun getTicketsFromApi() {
@@ -96,31 +88,13 @@ class UserViewModel : ViewModel() {
     }
 
 
-    fun getRoute(): String {
-        return "${ticket.value?.startingPoint} - ${ticket.value?.endingPoint}"
-    }
-
-    fun getType(): String {
-        return when (ticket.value?.type) {
-            "FULL_YEAR" -> "Full Year"
-            "SEVEN_DAYS" -> "Seven Days"
-            "ONE_DAY" -> "One Day"
-            else -> "Error"
-        }
-    }
-
-    fun getValidation(): String {
-        return "${
-            ticket.value?.startValidation?.subSequence(
-                0,
-                10
-            )
-        }\n${ticket.value?.startValidation?.subSequence(11, 19)}"
-    }
-
     fun onTicketClicked(ticket: Ticket) {
         _ticket.value = ticket
 
+    }
+
+    fun restoreStatus() {
+        _loginStatus.value = SealedApiStatus.NOT_INITIALIZED
     }
 
 

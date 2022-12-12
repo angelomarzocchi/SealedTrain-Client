@@ -7,17 +7,23 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.secure_unico.databinding.FragmentLoginBinding
 import com.example.secure_unico.model.SealedApiStatus
 import com.example.secure_unico.model.UserViewModel
+import kotlinx.coroutines.launch
 
 
-private lateinit var binding: FragmentLoginBinding
+
 
 class LoginFragment : Fragment() {
 
-    private val viewModel: UserViewModel by activityViewModels()
+    private val userViewModel: UserViewModel by activityViewModels()
+    private lateinit var binding: FragmentLoginBinding
+
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,6 +33,21 @@ class LoginFragment : Fragment() {
         val fragmentBinding = FragmentLoginBinding
             .inflate(inflater, container, false)
         binding = fragmentBinding
+        lifecycleScope.launch{
+            userViewModel.loginStatus.collect{
+                when(userViewModel.loginStatus.value) {
+                    SealedApiStatus.ERROR ->  Toast.makeText(context, "Wrong username/password", Toast.LENGTH_SHORT).show()
+
+                    SealedApiStatus.DONE -> {
+                        findNavController().navigate(R.id.action_loginFragment_to_listFragment)
+                        userViewModel.restoreStatus()
+                    }
+                    else -> {}
+                }
+            }
+        }
+
+
         return binding.root
     }
 
@@ -34,6 +55,7 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
+            viewModel = userViewModel
             lifecycleOwner = viewLifecycleOwner
             loginFragment = this@LoginFragment
             loginButton.setOnClickListener { login() }
@@ -63,17 +85,25 @@ class LoginFragment : Fragment() {
         if (!isOneOfTheFieldsEmpty) {
             //richiesta di login
 
-            viewModel.getToken(
+            userViewModel.getToken(
                 binding.usernameText.text.toString(),
                 binding.passwordText.text.toString()
             )
 
-
-            if (viewModel.loginStatus.value == SealedApiStatus.ERROR) {
+/*
+            if (userViewModel.loginStatus.value == SealedApiStatus.ERROR) {
                 Toast.makeText(context, "Wrong username/password", Toast.LENGTH_SHORT).show()
-            } else {
+            } else if(userViewModel.loginStatus.value == SealedApiStatus.DONE) {
                 findNavController().navigate(R.id.action_loginFragment_to_listFragment)
             }
+
+ */
+
+
+
+
+
+
 
 
 

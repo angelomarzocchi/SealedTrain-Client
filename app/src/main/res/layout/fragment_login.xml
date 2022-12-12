@@ -10,6 +10,9 @@
         <variable
             name="loginFragment"
             type="com.example.secure_unico.LoginFragment" />
+        <variable
+            name="viewModel"
+            type="com.example.secure_unico.model.UserViewModel" />
     </data>
 
 <ScrollView
@@ -93,6 +96,17 @@
             app:layout_constraintEnd_toEndOf="@id/passwordTextField"
             app:layout_constraintStart_toStartOf="@id/passwordTextField"
             app:layout_constraintTop_toBottomOf="@id/passwordTextField" />
+
+        <ImageView
+            android:id="@+id/status_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintTop_toBottomOf="@id/login_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:importantForAccessibility="no"
+            android:layout_marginTop="10dp"
+            app:sealedApiStatus="@{viewModel.loginStatus}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

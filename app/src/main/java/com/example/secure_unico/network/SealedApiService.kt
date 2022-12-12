@@ -25,9 +25,6 @@ interface SealedApiService {
     @POST("signin")
     suspend fun getToken(@Body request: LoginRequest): TokenResponse
 
-    @GET("authenticate")
-    suspend fun authenticate(@Header("Authorization") token: String)
-
     @GET("tickets")
     suspend fun getTickets(@Header("Authorization") token: String): List<Ticket>
 
