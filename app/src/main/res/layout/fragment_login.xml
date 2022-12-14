@@ -106,7 +106,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:importantForAccessibility="no"
             android:layout_marginTop="10dp"
-            app:sealedApiStatus="@{viewModel.loginStatus}"/>
+            app:sealedApiStatus="@{viewModel.loginStatus}"
+            app:tint="?attr/colorSecondary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

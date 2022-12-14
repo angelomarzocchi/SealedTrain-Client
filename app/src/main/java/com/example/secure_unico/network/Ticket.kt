@@ -22,7 +22,7 @@ class Ticket(
     }
 
     fun getValidation(): String {
-       return "${startValidation.subSequence(0,10)}\n${startValidation.subSequence(11,19)}"
+       return "${startValidation.subSequence(0,10)}\n${startValidation.subSequence(11,startValidation.length)}"
     }
 
     fun getRoute(): String {

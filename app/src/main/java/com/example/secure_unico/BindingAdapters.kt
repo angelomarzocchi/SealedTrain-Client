@@ -24,6 +24,10 @@ fun bindStatus(statusImageView: ImageView, status: SealedApiStatus?) {
             statusImageView.visibility = View.VISIBLE
             statusImageView.setImageResource(R.drawable.loading_animation)
         }
+        SealedApiStatus.NETWORK_ERROR -> {
+            statusImageView.visibility = View.VISIBLE
+            statusImageView.setImageResource(R.drawable.ic_connection_error)
+        }
 
         else -> {
             statusImageView.visibility = View.GONE

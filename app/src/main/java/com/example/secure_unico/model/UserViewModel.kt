@@ -15,9 +15,10 @@ import com.example.secure_unico.network.TokenResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
 
 
-enum class SealedApiStatus {NOT_INITIALIZED, LOADING, ERROR, DONE }
+enum class SealedApiStatus {NOT_INITIALIZED, LOADING, CREDENTIAL_ERROR,NETWORK_ERROR, DONE }
 enum class QrCodeStatus { LOADING, DONE }
 
 const val bearer = "Bearer "
@@ -58,9 +59,15 @@ class UserViewModel : ViewModel() {
 
 
             } catch (e: Exception) {
-                Log.d("loginError", e.message.toString())
-                _loginStatus.value = SealedApiStatus.ERROR
-            }
+                if(e::class == SocketTimeoutException::class) {
+                    Log.d("loginError", e.javaClass.name)
+                    _loginStatus.value = SealedApiStatus.NETWORK_ERROR
+                } else {
+                    Log.d("loginError", e.javaClass.name)
+                    _loginStatus.value = SealedApiStatus.CREDENTIAL_ERROR
+                }
+
+        }
         }
 
     }
@@ -72,7 +79,7 @@ class UserViewModel : ViewModel() {
                     SealedApi.retrofitService.getTickets(bearer + tokenResponse.value!!.token)
             } catch (e: Exception) {
                 _tickets.value = listOf()
-                Log.d("getTicketsError", e.message.toString())
+                Log.d("getTicketsError", e.toString())
             }
         }
     }

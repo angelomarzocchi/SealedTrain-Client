@@ -12,7 +12,8 @@
         <action
             android:id="@+id/action_loginFragment_to_listFragment"
             app:destination="@id/listFragment"
-            app:enterAnim="@android:anim/slide_in_left" />
+            app:enterAnim="@android:anim/slide_in_left"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/listFragment"
