@@ -5,6 +5,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.secure_unico.databinding.FragmentQrcodeBinding
@@ -22,6 +23,11 @@ class QrcodeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        activity?.window?.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE)
+
         // Inflate the layout for this fragment
         val fragmentBinding = FragmentQrcodeBinding.inflate(inflater)
         binding = fragmentBinding
