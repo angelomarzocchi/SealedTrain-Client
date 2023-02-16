@@ -1,5 +1,6 @@
 package com.example.secure_unico
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -28,6 +29,8 @@ class QrcodeFragment : Fragment() {
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE)
 
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_NOSENSOR
+
         // Inflate the layout for this fragment
         val fragmentBinding = FragmentQrcodeBinding.inflate(inflater)
         binding = fragmentBinding
@@ -45,6 +48,14 @@ class QrcodeFragment : Fragment() {
 
         binding.qrcodeImage.setImageBitmap(userViewModel.bitmap)
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        activity?.window?.clearFlags(
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
     }
 
 }
